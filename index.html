@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시엘(Ciel) - 라프텔 기반 애니 시청 파트너</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 31, 49, 0.75);
+            --primary: #70baff;
+            --primary-hover: #48a3ff;
+            --accent: #a5d8ff;
+            --text: #f0f6fc;
+            --text-sub: #94a3b8;
+            --border: rgba(112, 186, 255, 0.2);
+            --radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+
+        /* 네비게이션 바 */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 70px;
+            background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 10%; z-index: 1000; border-bottom: 1px solid var(--border);
+        }
+
+        /* 클릭 시 홈(#top)으로 이동하는 로고 */
+        .navbar .logo-link { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .navbar .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        .navbar .logo-text { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; }
+
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a:hover { color: var(--primary); transition: 0.2s; }
+        .btn-invite {
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            color: #fff; padding: 10px 20px; border-radius: 30px;
+            font-weight: 600; box-shadow: 0 4px 15px rgba(112, 186, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-invite:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(112, 186, 255, 0.5); }
+
+        /* 히어로 & 배너 섹션 */
+        .hero { padding: 120px 10% 60px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        
+        /* 17:6 비율 배너 공간 */
+        .banner-container {
+            width: 100%; max-width: 850px; aspect-ratio: 17/6; border-radius: var(--radius);
+            overflow: hidden; border: 2px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 30px;
+            background: #1e293b; position: relative;
+        }
+        .banner-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 12px; }
+        .hero h1 span { color: var(--primary); }
+        .hero p { font-size: 1.2rem; color: var(--text-sub); max-width: 600px; margin-bottom: 24px; }
+
+        /* 주요 기능 카드 섹션 */
+        .section-title { text-align: center; font-size: 2rem; font-weight: 800; margin: 60px 0 30px; color: var(--accent); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 0 10%; }
+        
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 30px; backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .card i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; }
+        .card h3 { font-size: 1.3rem; margin-bottom: 10px; }
+        .card p { color: var(--text-sub); font-size: 0.95rem; }
+
+        /* 깃허브 연동 공지사항 섹션 */
+        .notice-section { padding: 0 10%; margin-bottom: 80px; }
+        .notice-box {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 25px; min-height: 120px;
+        }
+        .notice-item { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+        .notice-item:last-child { border-bottom: none; }
+        .notice-date { color: var(--primary); font-size: 0.85rem; }
+
+        /* 푸터 */
+        footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--text-sub); font-size: 0.9rem; }
+    </style>
+</head>
+<body id="top">
+
+    <!-- 1. 로고 누르면 홈화면(#top)으로 이동하는 네비게이션 -->
+    <nav class="navbar">
+        <a href="#top" class="logo-link">
+            <!-- 💡 로고 이미지 경로 설정 -->
+            <img src="logo.png" alt="Ciel Logo" class="logo-img" onerror="this.src='https://github.com/bearmanentp/ciel-web/blob/main/%EC%8B%9C%EC%97%98%20%EB%A1%9C%EA%B3%A0.png?raw=true'">
+            <span class="logo-text">CIEL</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features">기능 안내</a>
+            <a href="#notices">공지사항</a>
+            <!-- 💡 초대 링크 부여 버튼 -->
+            <a href="https://discord.com/oauth2/authorize?client_id=1531944441273651230" target="_blank" class="btn-invite">
+                <i class="fa-brands font-discord"></i> 봇 초대하기
+            </a>
+        </div>
+    </nav>
+
+    <!-- 2. 히어로 및 배너 영역 -->
+    <section class="hero">
+        <div class="banner-container">
+            <!-- 💡 배너 이미지 경로 설정 -->
+            <img src="banner.png" alt="Ciel Banner" onerror="this.src='https://raw.githubusercontent.com/bearmanentp/ciel-web/refs/heads/main/%EC%8B%9C%EC%97%98%20%EB%B0%B0%EB%84%88.png'">
+        </div>
+        <h1>애니 덕후를 위한 완벽한 파트너, <span>시엘</span></h1>
+        <p>라프텔 연동 애니 일정부터 DB 검색, 신작 알림, OST 추천까지! 24시간 라즈베리파이에서 당신의 덕질을 스마트하게 보조합니다.</p>
+        <a href="https://discord.com/oauth2/authorize?client_id=1531944441273651230" target="_blank" class="btn-invite" style="padding: 14px 32px; font-size: 1.1rem;">
+            서버에 시엘 추가하기
+        </a>
+    </section>
+
+    <!-- 3. 봇 설명 / 기능 쫘악 안내 -->
+    <h2 class="section-title" id="features">✨ 주요 기능</h2>
+    <section class="features-grid">
+        <div class="card">
+            <i class="fa-regular fa-calendar-check"></i>
+            <h3>애니 시청 일정</h3>
+            <p>요일별 방영 스케줄과 라프텔 업로드 시각을 한눈에 깔끔하게 보여줍니다.</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <h3>라프텔 DB 초고속 검색</h3>
+            <p>HTTP/셀레늄 이중 크롤링으로 장르, 줄거리, 평가 정보를 0.1초 만에 가져옵니다.</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-bell"></i>
+            <h3>신작 방영 알림(제공예정)</h3>
+            <p>관심 있는 애니메이션의 신규 에피소드가 뜬 즉시 디스코드 알람을 쏩니다.</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-user-ninja"></i>
+            <h3>캐릭터 DB 조회(제공예정)</h3>
+            <p>애니 속 최애 캐릭터의 상세 프로필과 성우진 정보를 손쉽게 찾아냅니다.</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-music"></i>
+            <h3>애니 OST 추천(제공예정)</h3>
+            <p>명작 OP/ED 곡부터 숨겨진 OST까지 매일 새로운 테마곡을 추천합니다.</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-microchip"></i>
+            <h3>24시간 무중단 구동</h3>
+            <p>저전력 라즈베리파이 5 환경에서 멈춤 없이 365일 쾌적하게 작동합니다.</p>
+        </div>
+    </section>
+
+    <!-- 4. 깃허브 파일 연동 공지사항 -->
+    <h2 class="section-title" id="notices">📢 공지사항</h2>
+    <section class="notice-section">
+        <div class="notice-box" id="notice-container">
+            <div style="text-align:center; color: var(--text-sub);">공지사항을 불러오는 중...</div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <p>© 2026 Ciel Bot Project. All rights reserved.</p>
+    </footer>
+
+    <!-- 깃허브 공지사항 로딩 스크립트 -->
+    <script>
+        // 💡 깃허브에 올린 공지사항 JSON 파일 URL을 적어주세요.
+        // 예시: https://raw.githubusercontent.com/사용자명/리포지토리명/main/notices.json
+        const GITHUB_NOTICE_URL = "https://raw.githubusercontent.com/github.com/bearmanentp/main/notices.json";
+
+        async function loadNotices() {
+            const container = document.getElementById('notice-container');
+            try {
+                const response = await fetch(GITHUB_NOTICE_URL);
+                if (!response.ok) throw new Error();
+                const notices = await response.json();
+
+                container.innerHTML = notices.map(item => `
+                    <div class="notice-item">
+                        <div><strong>${item.title}</strong> - ${item.content}</div>
+                        <div class="notice-date">${item.date}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                // 깃허브 설정 전 임시 테스트용 공지 표시
+                container.innerHTML = `
+                    <div class="notice-item">
+                        <div><strong>[안내]</strong> 시엘 봇 웹사이트가 오픈되었습니다!</div>
+                        <div class="notice-date">2026-08-15</div>
+                    </div>
+                    <div class="notice-item">
+                        <div><strong>[업데이트]</strong> 라프텔 초고속 파싱 엔진이 적용되었습니다.</div>
+                        <div class="notice-date">2026-08-14</div>
+                    </div>
+                `;
+            }
+        }
+        loadNotices();
+    </script>
+</body>
+</html>
